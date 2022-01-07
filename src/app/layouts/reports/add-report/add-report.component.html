@@ -1,0 +1,255 @@
+<div class="main-content pt-5">
+  <div class="col-md-10 ml-auto mr-auto">
+    <div class="card" *ngIf="!editable">
+      <div class="card-header card-header-danger">
+        <div class="row">
+          <div class="col-md-4">
+            <h3 class="card-title ">Generate Report</h3>
+          </div>
+          <!-- <div class="col-md-3 images_select_box">
+            <mat-form-field>
+              <mat-label>Select Project</mat-label>
+              <mat-select id="project_id" name="project_id" [(ngModel)]="project_id"
+                (selectionChange)="selectedProject($event.value,true)" disableOptionCentering>
+                <mat-option *ngFor="let project of projects" [value]="project._id">
+                  {{project.project_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> -->
+          <div class="col-md-3 images_select_box">
+            <mat-form-field>
+              <mat-label>Select Drawing</mat-label>
+              <mat-select id="drawing_id" name="drawing_id" [(ngModel)]="drawing_id"
+                (selectionChange)="selectedDrawing($event.value)" disableOptionCentering>
+                <mat-option *ngFor="let drawing of drawings" [value]="drawing._id">
+                  {{drawing.drawing_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-2 mt-2">
+            <button style="float:right" mat-raised-button (click)="resetFilter()">Reset Filter</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row mb50">
+          <div class="col-md-12">
+            <div class="border_box border_none">
+              <form #myForm="ngForm">
+
+                <div class="row">
+                  <div class="col-md-12 textbox-full-width">
+                    <mat-form-field>
+                      <mat-label>Report Name</mat-label>
+                      <input maxlength="25" matInput required id="report_name" [(ngModel)]="report.report_name"
+                        name="report_name"
+                        (blur)="report.report_name = sharedService.trimming_function(report.report_name)"
+                        #report_name="ngModel">
+                    </mat-form-field>
+                    <mat-error class="text-left"
+                      *ngIf="(report_name.dirty || report_name.touched) && report_name.invalid">
+                      Report Name is required
+                    </mat-error>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 col-sm-12 col-12"> <label>
+                      <h4><b>Selected Images</b></h4>
+                    </label></div>
+                  <div class="col-md-12 textbox-full-width report_img_list_selected">
+                    <div class="mr-2 mb-3 float-left border" *ngFor="let image of selectedImg; let i = index">
+                      <span style="position: relative;margin: 0 auto;display:block;">
+                        <div class="report_img_box ">
+                          <!-- <img src="{{image.img[0].detected_image}}" class="report_img_box_inner "> -->
+                          <app-image-edit [curosal]="false" class="report_img_box_inner" [image]="image.img[0].detected_image"
+                          [staticarray]="image.img[0].box_overlays" #cmp></app-image-edit>
+                          <a class="upload_trash report_hover_box"
+                            (click)="removeFile(i , image.img , image.id , image.image_name)">
+                            <img src="assets/img/delete.svg">
+                          </a>
+                        </div>
+                      </span>
+
+                      <!-- <p class="pl-2 mb-0">
+                        {{ (image.image_name.length>10)? (image.image_name | slice:0:10)+'...':(image.image_name) }}
+                      </p>
+                      <div *ngIf="image.img.length != 1">
+                        <a href="javascript:void(0)" matTooltip="View" [matTooltipPosition]="'above'"
+                          matTooltipClass="mat_pop" class="btn btn-link btn-sm btn-just-icon pl-2 more-img-popup"
+                          (click)="viewImages(image.img)" data-toggle="modal" data-target="#viewModel">
+                          + {{image.img.length - 1}}
+                        </a>
+                      </div> -->
+                      <div class="report_img_list_img_name">
+                        <small class="px-1">
+                            {{ (image.image_name.length>10)? (image.image_name | slice:0:17)+'...':(image.image_name) }}
+                        </small>
+                         
+                          <div matTooltip="View" [matTooltipPosition]="'above'"
+                            matTooltipClass="mat_pop" class="btn btn-sm rounded-0 more-img-popup"
+                            (click)="viewImages(image.img)" data-toggle="modal" data-target="#viewModel">
+                            <span *ngIf="image.img.length != 1"> + {{image.img.length - 1}} </span> <i class="material-icons">visibility</i> 
+                      </div>
+                    </div>
+                    </div>
+
+                    <div *ngIf="selectedImg.length == 0" class="col-md-12 text-center">
+                      <mat-label><b>No Images Selected</b></mat-label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 dropdown-divider"></div>
+
+                <div class="row">
+                  <div class="col-md-12 "> <label>
+                      <h4><b>Images</b></h4>
+                    </label></div>
+                  <div class="col-md-12 textbox-full-width report_img_list">
+
+                    <div class="mr-2 mb-2 float-left border" *ngFor="let image of images; let i = index">
+                      <span style="position: relative;margin: 0 auto;display:block;">
+                        <div class="report_img_box" (click)="selectedimages(i,image.img,image.id,image.image_name)">
+                          <!-- <img src="{{image.img[0]?.detected_image}}" class="report_img_box_inner"> -->
+                          <app-image-edit [curosal]="false" class="report_img_box_inner" [image]="image.img[0].detected_image"
+                          [staticarray]="image.img[0].box_overlays" #cmp></app-image-edit>
+                          <a *ngIf="image.isFlag == true" class="upload_trash report_hover_box">
+                            <img src="assets/img/verified.svg">
+                          </a>
+                        </div>
+                      </span>
+
+                      <div class="report_img_list_img_name">
+                          <small class="px-1">
+                              {{ (image.image_name.length>10)? (image.image_name | slice:0:17)+'...':(image.image_name) }}
+                          </small>
+                           
+                            <div matTooltip="View" [matTooltipPosition]="'above'"
+                              matTooltipClass="mat_pop" class="btn btn-sm rounded-0 more-img-popup"
+                              (click)="viewImages(image.img)" data-toggle="modal" data-target="#viewModel">
+                              <span *ngIf="image.img.length != 1"> + {{image.img.length - 1}} </span> <i class="material-icons">visibility</i> 
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div *ngIf="images.length == 0" class="col-md-12 text-center">
+                      <mat-label><b>No Images Found</b></mat-label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mt20">
+                  <div class="col-md-7 text-right" id="report_pagination">
+                    <app-pagination [childMessage]="length" [index]="index" (messageEvent)="receiveMessage($event)">
+                    </app-pagination>
+                  </div>
+                  <div class="col-md-5 text-right">
+                    <button type="submit"
+                      [ngClass]="myForm.invalid || selectedImg.length == 0 ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                      [disabled]="myForm.invalid || selectedImg.length == 0" (click)="onSave()"
+                      class="mr-2">Create</button>
+
+                    <button type="button" class="btn btn-danger btn_d_consist ml15"
+                      [routerLink]="['/reports']">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card" *ngIf="editable">
+      <div class="card-header card-header-danger">
+        <h4 class="card-title">Edit Report</h4>
+      </div>
+      <div class="card-body">
+        <div class="row mb50">
+          <div class="col-md-12">
+            <div class="border_box border_none">
+              <form #myForm="ngForm">
+                <div class="row">
+                  <div class="col-md-12 textbox-full-width textbox-full-width-pb20">
+                    <mat-form-field>
+                      <mat-label>Report Name</mat-label>
+                      <input maxlength="25" matInput required id="report_name" [(ngModel)]="report.report_name"
+                        name="report_name"
+                        (blur)="report.report_name = sharedService.trimming_function(report.report_name)"
+                        #report_name="ngModel">
+                    </mat-form-field>
+                    <mat-error class="text-left"
+                      *ngIf="(report_name.dirty || report_name.touched) && report_name.invalid">
+                      Report Name is required
+                    </mat-error>
+
+                  </div>
+                </div>
+                <div class="row mt20">
+                  <div class="col-md-12 text-right">
+
+                    <button type="submit" *ngIf="editable"
+                      [ngClass]="myForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                      [disabled]="myForm.invalid" (click)="onUpdate()" class="mr-2">Update</button>
+                    <button type="button" class="btn btn-danger btn_d_consist ml15"
+                      [routerLink]="['/reports']">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade " id="viewModel" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title cl-black" id="myModalLabel"> <b> Image Preview </b> </h4>
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
+
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="offset-lg-3 col-md-6 text-center">
+              <div id="demo" class="carousel slide" data-ride="carousel">
+                <!-- The slideshow -->
+                <div class="carousel-inner">
+                  <div class="carousel-item " [ngClass]="{'active': i == currentIndex}"
+                    *ngFor="let file of sliderImage;let i = index">
+                    <!-- <img [src]="file.detected_image"> -->
+                    <div class="slider_box">
+                    <app-image-edit [curosal]="true" [image]="file.detected_image" style="width:100%"
+                        [staticarray]="file.box_overlays?file.box_overlays:[]" #cmp></app-image-edit>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div> -->
+
+    </div>
+  </div>
+</div>

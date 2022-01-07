@@ -1,0 +1,180 @@
+<!-- <div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <button class="mat-raised-button" [routerLink]="['/inspectors/add-inspector']">Add
+                    Inspector</button>
+                <div class="col-md-4 pull-right">
+                    <app-search-textbox (searchEvent)="receiveSearchValue($event)" (resetIndex)="resetIndex($event)">
+                    </app-search-textbox>
+                </div>
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h3 class="card-title ">Inspectors List</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="dataSource" matSortDisableClear matSort
+                                class="mat-elevation-z8 table-hover" width="100%">
+                                <ng-container matColumnDef="no">
+                                    <th width="14%" mat-header-cell *matHeaderCellDef class="text-primary"> No </th>
+                                    <td width="14%" mat-cell *matCellDef="let element ; let i = index"> {{i + 1}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="user_name">
+                                    <th width="17%" (click)="sortItem('user_name')" mat-header-cell *matHeaderCellDef
+                                        mat-sort-header class="text-primary"> Name </th>
+                                    <td width="17%" mat-cell *matCellDef="let element"> {{element?.user_name}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="email">
+                                    <th width="17%" (click)="sortItem('email')" mat-header-cell *matHeaderCellDef
+                                        mat-sort-header class="text-primary"> Email </th>
+                                    <td width="17%" mat-cell *matCellDef="let element">
+                                        {{element?.email}}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="mobile_number">
+                                    <th width="14%" (click)="sortItem('mobile_number')" mat-header-cell
+                                        *matHeaderCellDef mat-sort-header class="text-primary"> Mobile Number </th>
+                                    <td width="14%" mat-cell *matCellDef="let element"> {{element?.prefix_dialing}}
+                                        {{element?.mobile_number | phone: element?.country_code}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="profile_pic">
+                                    <th width="14%" mat-header-cell *matHeaderCellDef class="text-center text-primary">
+                                        Profile Image
+                                    </th>
+                                    <td width="14%" mat-cell *matCellDef="let element" class="text-center">
+                                        <span *ngIf="element.profile_pic != null"><img src="{{element?.profile_pic}}"
+                                                class="rounded-circle" width="40" height="40"> </span>
+                                        <span *ngIf="element.profile_pic == null"><img src="assets/img/user.png"
+                                                class="rounded-circle" width="40" height="40"> </span>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="action">
+                                    <th width="8%" mat-header-cell *matHeaderCellDef class="text-center text-primary">
+                                        Action </th>
+                                    <td width="8%" mat-cell *matCellDef="let element" class="text-center">
+                                        <a [routerLink]="'/inspectors/edit-inspector/' + element._id" matTooltip="Edit"
+                                            [matTooltipPosition]="'above'" matTooltipClass="mat_pop"
+                                            class="btn  btn-link btn-sm btn-just-icon">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                        <a href="javascript:void(0)" matTooltip="Delete" [matTooltipPosition]="'above'" matTooltipClass="mat_pop"
+                                            class="btn btn-link btn-sm btn-just-icon"
+                                            (click)="openDialog(element._id)"><i class="material-icons">delete</i> </a>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                            <div *ngIf="length == 0" class="text-center font16 mt15 mb15 pt-4">
+                                No Record Found
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <app-pagination [childMessage]="length" [index]="index" (messageEvent)="receiveMessage($event)">
+                        </app-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <button class="mat-raised-button" *ngIf="permissions.USER.CREATE_USER == 1" [routerLink]="['/inspectors/add-inspector']">Add
+            New User</button>
+          <div class="col-md-4 pull-right">
+            <app-search-textbox (resetIndex)="resetIndex($event)" (searchEvent)="receiveSearchValue($event)">
+            </app-search-textbox>
+          </div>
+  
+          <div class="card">
+            <div class="row card-header card-header-danger">
+              <div class="col-md-6 d-flex align-items-center">
+                <h3 class="m-0 ">User List</h3>
+              </div>
+              <div class="col-md-2 mt-2">
+                <button style="float:right" mat-raised-button (click)="resetFilter()">Reset Filter</button>
+              </div>
+              <div class="col-md-2 images_select_box">
+                <mat-form-field>
+                  <mat-label>User Type</mat-label>
+                  <mat-select (selectionChange)="onUserType($event.value)"  [(ngModel)]="usertypes">
+                    <mat-option *ngFor="let data of mainUserType;let i=index"  [value]="data.user_type">
+                      {{data.user_type_name | replaceUnderscore | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-2 images_select_box">
+                <mat-form-field>
+                  <mat-label>Select Sub-User Type</mat-label>
+                  <mat-select (selectionChange)="userSubType($event.value)" [disabled]=isDisable  [(ngModel)]="subtypes">
+                    <mat-option *ngFor="let data of subUserType" [value]="data.user_type">
+                      {{data.user_type_name | replaceUnderscore | titlecase}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+  
+            </div>
+            <div class="col-lg-12 pt-4">
+              <div class="row"  *ngIf="length > 0">
+                <div class="col-lg-3 col-md-6 col-sm-6 my-2" *ngFor="let user of Userslist">
+                  <mat-card class="example-card">
+                    <mat-card-content>
+                      <div class="text-center mb-3" *ngIf="user.profile_pic != null"><img src="{{user?.profile_pic}}" class="rounded-circle"
+                          width="100" height="100"> </div>
+                      <div *ngIf="user.profile_pic == null" class="text-center mb-3"><img src="assets/img/user.png" class="rounded-circle"
+                          width="100" height="100"> </div>
+                        <div class="userList-btn">
+                          <a *ngIf="permissions.USER.UPDATE_USER == 1" [routerLink]="'/inspectors/edit-inspector/' + user._id" matTooltip="Edit"
+                             [matTooltipPosition]="'above'" matTooltipClass="mat_pop"
+                             class="btn  btn-link btn-sm btn-just-icon">
+                            <i class="material-icons">edit</i>
+                          </a>
+                          <a *ngIf="permissions.USER.DELETE_USER == 1" href="javascript:void(0)" matTooltip="Delete" [matTooltipPosition]="'above'"
+                             matTooltipClass="mat_pop" class="btn btn-link btn-sm btn-just-icon"
+                            (click)="openDialog(user._id)"><i class="material-icons">delete</i>
+                          </a>
+                        </div>
+                      <mat-divider></mat-divider>
+                      <div class="w-100 pt-3 pb-1">
+                        <div class="row">
+                          <div class="col-lg-12 text-center"><h4 class="mb-0">{{user.user_name}}</h4></div>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </div>
+              <div *ngIf="length == 0" class="text-center ">
+                <div class="p-5 border h4 rounded">No Record Found</div>
+                <hr>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center w-100">
+        <app-pagination [childMessage]="length" [index]="index" (messageEvent)="receiveMessage($event)">
+        </app-pagination>
+        </div>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <button *ngIf="permissions.REPORT.CREATE_REPORT == 1" mat-raised-button [routerLink]="['/reports/add-report']">Create Report</button>
+        <div class="col-md-4 pull-right">
+          <app-search-textbox (resetIndex)="resetIndex($event)" (searchEvent)="receiveSearchValue($event)">
+          </app-search-textbox>
+        </div>
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <div class="row">
+              <div class="col-md-6">
+                <h3 class="card-title ">Reports List</h3>
+              </div>
+
+              <div class="col-md-6"></div>
+
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="dataSource" matSortDisableClear matSort
+                class="mat-elevation-z8 table-hover" width="100%" *ngIf="length > 0">
+                <ng-container matColumnDef="no">
+                  <th width="8%" mat-header-cell *matHeaderCellDef class="text-primary"> No </th>
+                  <td width="8%" mat-cell *matCellDef="let element ; let i = index"> {{i + 1}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="report_name">
+                  <th width="20%" (click)="sortItem('report_name')" mat-header-cell *matHeaderCellDef mat-sort-header
+                    class="text-primary">
+                    Report Name </th>
+                  <td width="20%" mat-cell *matCellDef="let element"> {{element?.report_name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="created_at">
+                  <th width="20%" (click)="sortItem('created_at')" mat-header-cell *matHeaderCellDef mat-sort-header
+                    class="text-primary">
+                    Created Date </th>
+                  <td width="20%" mat-cell *matCellDef="let element"> {{element?.created_at| dateFormatPipe}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="pdf">
+                  <th width="20%" mat-header-cell *matHeaderCellDef class="text-primary"> Pdf </th>
+                  <td width="20%" mat-cell *matCellDef="let element">
+                    <a href="{{element?.pdf_link}}" target="_blank" download>
+                      <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                    </a>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th width="15%" mat-header-cell *matHeaderCellDef class="text-center text-primary"> Action </th>
+                  <td width="15%" mat-cell *matCellDef="let element" class="text-center">
+                    <a *ngIf="permissions.REPORT.UPDATE_REPORT == 1" [routerLink]="'/reports/edit-report/' + element._id" matTooltip="Edit"
+                      [matTooltipPosition]="'above'" matTooltipClass="mat_pop"
+                      class="btn  btn-link btn-sm btn-just-icon">
+                      <i class="material-icons">edit</i>
+                    </a>
+
+                    <a *ngIf="permissions.REPORT.DELETE_REPORT == 1" href="javascript:void(0)" matTooltip="Delete" [matTooltipPosition]="'above'"
+                      matTooltipClass="mat_pop" class="btn btn-link btn-sm btn-just-icon"
+                      (click)="openDialog(element._id)"><i class="material-icons">delete</i> </a>
+
+
+                    <a *ngIf="permissions.REPORT.DELETE_REPORT == 0 && permissions.REPORT.DELETE_REPORT == 0 " href="javascript:void(0)" 
+                      matTooltipClass="mat_pop" class="btn btn-link btn-sm btn-just-icon"
+                      ><i class="material-icons"> - </i> </a>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <div *ngIf="length == 0" class="text-center ">
+                <div class="p-5 border h4 rounded   ">No Record Found</div>
+                <hr>
+              </div>
+            </div>
+          </div>
+          <div>
+            <app-pagination [childMessage]="length" [index]="index" (messageEvent)="receiveMessage($event)">
+            </app-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <app-file-upload-progressbar-box></app-file-upload-progressbar-box> -->

@@ -1,0 +1,259 @@
+<!-- <div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-4 pull-right">
+          <app-search-textbox (resetIndex)="resetIndex($event)" (searchEvent)="receiveSearchValue($event)">
+          </app-search-textbox>
+        </div>
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <div class="row">
+              <div class="col-md-4">
+                <h3 class="card-title ">Images List</h3>
+              </div>
+              <div class="col-md-3 images_select_box">
+                
+              </div>
+              <div class="col-md-3 images_select_box">
+               
+              </div>
+              <div class="col-md-2 mt-2">
+                
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="dataSource" matSortDisableClear matSort
+                class="mat-elevation-z8 table-hover" width="100%" *ngIf="length > 0">
+                <ng-container matColumnDef="no">
+                  <th width="8%" mat-header-cell *matHeaderCellDef class="text-primary"> No </th>
+                  <td width="8%" mat-cell *matCellDef="let element ; let i = index"> {{i + 1}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="image">
+                  <th width="10%" mat-header-cell *matHeaderCellDef class="text-primary"> Image </th>
+                  <td width="10%" mat-cell *matCellDef="let element"> <img c15="" alt="Image"
+                      src="{{element?.detectedImages[0]?.detected_image}}" width="25" height="25"
+                      [ngClass]="{'detected_image' : element?.detectedImages.length != 1}">
+                    <img c15="" alt="Image" *ngIf="element?.detectedImages.length != 1"
+                      src="assets/img/image_stack-icon.png" width="25" style="margin-left: 9px">
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="image_count">
+                  <th width="10%" mat-header-cell *matHeaderCellDef class="text-primary"> Count </th>
+                  <td width="10%" mat-cell *matCellDef="let element">
+                    <span *ngIf="element?.detectedImages.length != 1"> {{element?.detectedImages.length}}
+                    </span>
+                    <span *ngIf="element?.detectedImages.length === 1"> 1
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="image_name">
+                  <th width="20%" (click)="sortItem('image_name')" mat-header-cell *matHeaderCellDef mat-sort-header
+                    class="text-primary">
+                    Image Name </th>
+                  <td width="20%" mat-cell *matCellDef="let element"> {{element?.image_name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="drawing_name">
+                  <th width="15%" (click)="sortItem('drawing_name')" mat-header-cell *matHeaderCellDef mat-sort-header
+                    class="text-primary">
+                    Drawing Name </th>
+                  <td width="15%" mat-cell *matCellDef="let element">
+                    {{element?.drawing_name}}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th width="15%" mat-header-cell *matHeaderCellDef class="text-center text-primary"> Action </th>
+                  <td width="15%" mat-cell *matCellDef="let element" class="text-center">
+
+                    <a [routerLink]="'/images/view-detail/' + element._id" matTooltip="View"
+                      [matTooltipPosition]="'above'" matTooltipClass="mat_pop"
+                      class="btn  btn-link btn-sm btn-just-icon">
+                      <i class="material-icons">visibility</i>
+                    </a>
+                    <a [routerLink]="'/images/edit-image/' + element._id" matTooltip="Edit"
+                      [matTooltipPosition]="'above'" matTooltipClass="mat_pop"
+                      class="btn  btn-link btn-sm btn-just-icon">
+                      <i class="material-icons">edit</i>
+                    </a>
+                    <a href="javascript:void(0)" matTooltip="Delete" [matTooltipPosition]="'above'"
+                      matTooltipClass="mat_pop" class="btn btn-link btn-sm btn-just-icon"
+                      (click)="openDialog(element._id)"><i class="material-icons">delete</i>
+                    </a>
+                  </td>
+
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <div *ngIf="length == 0" class="text-center ">
+                <div class="p-5 border h4 rounded   ">No Record Found</div>
+                <hr>
+              </div>
+            </div>
+          </div>
+          <div>
+            <app-pagination [childMessage]="length" [index]="index" (messageEvent)="receiveMessage($event)">
+            </app-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-12">
+              <button mat-raised-button *ngIf="permissions.IMAGE.CREATE_IMAGE == 1" [routerLink]="['/images/upload-images']">Add Gallery Images</button>
+              <div class="col-md-4 pull-right pb-4 mb-5"></div>
+          </div>
+          <div class="card">
+              <div class="card-header card-header-danger">
+                  <div class="row">
+                      <div class="col-md-8">
+                          <h3 class="card-title">Gallery List</h3>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-12 py-4">
+                  <div class="row" *ngIf="length > 0">
+                      <div class="col-lg-3 col-md-3 col-sm-4 col-12 mb-4" *ngFor="let imeges of imageListData">
+                          <mat-card>
+                              <img class="mb-0" mat-card-image  src="{{imeges?.detectedImages[0]?.detected_image}}" class="gallery-img"  alt="img">
+                              <mat-card-actions class="text-center">
+                                  <b *ngIf="imeges.drawing_name.length == 0 || imeges.drawing_id.length == 0 ">Image Not Assigned</b>
+                                  <b *ngIf="imeges.drawing_name.length > 0 || imeges.drawing_id.length > 0 ">----</b>
+                                  <p><b>{{imeges.image_name | truncate:[15, '...']}}</b></p>
+                                  <button *ngIf="permissions.IMAGE.VIEW_IMAGE == 1" mat-icon-button  class="mr-2"><mat-icon aria-hidden="false" [routerLink]="'/images/view-detail/' + imeges._id">visibility</mat-icon></button>
+                                  <button *ngIf="permissions.IMAGE.UPDATE_IMAGE == 1" mat-icon-button  class="mr-2"><mat-icon aria-hidden="false" [routerLink]="'/images/edit-image/' + imeges._id">edit</mat-icon></button>
+                                  <button *ngIf="permissions.IMAGE.DELETE_IMAGE == 1" mat-icon-button  color="warn"><mat-icon aria-hidden="false" (click)="openDialog(imeges._id)">delete</mat-icon></button>
+                                  <!-- <a [routerLink]="'/images/view-detail/' + imeges._id" matTooltip="View"
+                                     [matTooltipPosition]="'above'" matTooltipClass="mat_pop"
+                                     class="btn  btn-link btn-sm btn-just-icon">
+                                     <i class="material-icons">visibility</i>
+                                  </a>
+                                <a [routerLink]="'/images/edit-image/' + imeges._id" matTooltip="Edit"
+                                   [matTooltipPosition]="'above'" matTooltipClass="mat_pop"
+                                   class="btn  btn-link btn-sm btn-just-icon">
+                                   <i class="material-icons">edit</i>
+                                </a>
+                                <a href="javascript:void(0)" matTooltip="Delete" [matTooltipPosition]="'above'"
+                                  matTooltipClass="mat_pop" class="btn btn-link btn-sm btn-just-icon"
+                                  (click)="openDialog(imeges._id)"><i class="material-icons">delete</i>
+                                </a> -->
+                              </mat-card-actions>
+                          </mat-card>
+                      </div>
+                  </div>
+                  <div *ngIf="length == 0" class="text-center ">
+                    <div class="p-5 border h4 rounded   ">No Record Found</div>
+                    <hr>
+                  </div>
+                  <mat-divider></mat-divider>
+
+                  <div class="d-flex justify-content-center mt-4">
+                    <app-pagination [childMessage]="length" [index]="index" (messageEvent)="receiveMessage($event)">
+                    </app-pagination>
+                  </div>
+              </div>
+              
+          </div>
+      </div>
+  </div>
+</div>
+<!-- <app-file-upload-progressbar-box></app-file-upload-progressbar-box> -->
+<div class="modal fade " id="viewModel" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius: 0;">
+      <div class="modal-header pad0">
+        <h4 class="modal-title font-weight-bold">Image Detail</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <img c15="" alt="Image" src="assets/img/ModelWindowClose.svg" width="20">
+        </button>
+      </div>
+      <div class="modal-body ">
+        <table class="mb-2">
+          <tr>
+            <th>Image Name</th>
+            <td>:</td>
+            <td>{{viewContent?.image_name}}</td>
+          </tr>
+          <tr>
+            <th>Caption</th>
+            <td>:</td>
+            <td>{{viewContent?.caption}}</td>
+          </tr>
+        </table>
+        <div class="row mt-2 mt-3">
+          <div class="col-md-6 text-center">
+            <h4 class="font-weight-bold">Cad Image</h4>
+            <div *ngIf="viewContent?.detected_images.length == 1">
+              <!-- <img [src]="viewContent?.detected_images[0].detected_image"  style="max-height:500px;max-width:360px" > -->
+              <app-image-edit [curosal]="true" [image]="viewContent?.detected_images[0].detected_image"
+                [staticarray]="viewContent?.detected_images[0].box_overlays" #cmp></app-image-edit>
+              <button type="submit" class="mr-2" data-toggle="modal"
+                (click)="editable(viewContent?.detected_images[0].detected_image,viewContent?.detected_images[0]._id)"
+                data-target="#viewModel1">Edit
+              </button>
+            </div>
+            <div *ngIf="viewContent?.detected_images.length > 1">
+              <div id="demo" class="carousel slide" data-ride="carousel">
+                <!-- The slideshow -->
+                <div class="carousel-inner">
+                  <div class="carousel-item slider_box" [ngClass]="{'active': i == currentIndex}"
+                    *ngFor="let file of viewContent?.detected_images;let i = index">
+                    <!-- <img [src]="file.detected_image" > -->
+                    <app-image-edit [curosal]="true" [image]="file.detected_image" [staticarray]="file.box_overlays"
+                      #cmp></app-image-edit>
+
+                  </div>
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-md-6 text-center">
+            <h4 class="font-weight-bold">Detected Image:</h4>
+            <canvas style="max-height:500px;max-width:360px" class="img-thumbnail" #canvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade " id="imagemodal" role="dialog">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+            class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Image preview</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row mt-5">
+          <div class="col-md-12">
+            <img src="assets/img/user.png" id="imagepreview" style="width: 500px; height: 564px;">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+   </div>
+</div>

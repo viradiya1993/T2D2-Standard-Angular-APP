@@ -1,0 +1,243 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <a class="card card-stats dashboard-link" [routerLink]="'/project-user'">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <h3 class="card-title text-center pt-4">{{dashboardData?.users}}
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <h4 class="w-100 text-center"> Users </h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <a class="card card-stats dashboard-link" [routerLink]="'/drawings'">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <h3 class="card-title text-center pt-4">{{dashboardData?.drawings}}
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <h4 class="w-100 text-center">Drawings</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <a class="card card-stats dashboard-link" [routerLink]="'/images'">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <h3 class="card-title text-center pt-4">{{dashboardData?.images}}
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <h4 class="w-100 text-center">Images</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <a class="card card-stats dashboard-link" [routerLink]="'/reports'">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <h3 class="card-title text-center pt-4">{{dashboardData?.reports}}
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <h4 class="w-100 text-center">Reports</h4>
+                    </div>
+                </a>
+            </div>
+            <!-- <div class="col-lg-3 col-md-6 col-sm-6">
+                <a [routerLink]="'/reports'" class="card card-stats dashboard-link">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <h3 class="card-title text-center pt-4">{{dashboardData?.reports}}
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <h4 class="w-100 text-center">Reports</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <a [routerLink]="'/damage-detection'" class="card card-stats dashboard-link">                    
+                    <div class="card-header card-header-warning card-header-icon">
+                        <h3 class="card-title text-center pt-1"><i class="material-icons">compare</i>
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <h4 class="w-100 text-center">Damage Detection</h4>
+                    </div>
+                </a>
+            </div> -->
+        </div>
+    </div>
+</div>
+<!-- <div class="main-content">
+    <div class="container-fluid">
+    <mat-tab-group mat-align-tabs="start">
+        <mat-tab label="Projects">
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field class="datepicker-color">
+                      <input matInput (dateChange)="filterDate()" [(ngModel)]="start_date" [matDatepicker]="picker"
+                        placeholder="Start Date" disabled>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field class="datepicker-color">
+                      <input matInput [min]="start_date" (dateChange)="filterDate()" [(ngModel)]="end_date"
+                        [matDatepicker]="picker1" placeholder="End Date" disabled>
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <app-search-textbox (resetIndex)="resetIndex($event)" (searchEvent)="receiveSearchValue($event)">
+                    </app-search-textbox>
+                </div>
+            </div>   
+            <div class="row">            
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <h4 class="card-title text-center pt-4">Startdate - 13/01/2019</h4>
+                            <h4 class="card-title text-center pt-4">Enddate - 01/10/2019</h4>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> P1 </h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <h4 class="card-title text-center pt-4">Startdate - 13/01/2019</h4>
+                            <h4 class="card-title text-center pt-4">Enddate - 01/10/2019</h4>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> P2 </h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <h4 class="card-title text-center pt-4">Startdate - 13/01/2019</h4>
+                            <h4 class="card-title text-center pt-4">Enddate - 01/10/2019</h4>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> P3 </h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <h4 class="card-title text-center pt-4">Startdate - 13/01/2019</h4>
+                            <h4 class="card-title text-center pt-4">Enddate - 01/10/2019</h4>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> P4 </h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <h4 class="card-title text-center pt-4">Startdate - 13/01/2019</h4>
+                            <h4 class="card-title text-center pt-4">Enddate - 01/10/2019</h4>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> P5 </h4>
+                        </div>
+                    </a>
+                </div>
+            </div>  
+        </mat-tab>
+        <mat-tab label="Users">
+            <div class="row">
+                <div class="col-md-4">
+                    <button mat-flat-button color="primary">Add new User</button>
+                </div>
+                <div class="row">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select an option</mat-label>
+                        <mat-select [(value)]="selected">
+                          <mat-option>None</mat-option>
+                          <mat-option value="option1">Option 1</mat-option>
+                          <mat-option value="option2">Option 2</mat-option>
+                          <mat-option value="option3">Option 3</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <app-search-textbox (resetIndex)="resetIndex($event)" (searchEvent)="receiveSearchValue($event)">
+                    </app-search-textbox>
+                </div>
+            </div>
+            <div class="row">            
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <span><img src="assets/img/user.png"
+                                class="rounded-circle" width="40" height="40">
+                            </span>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> Inspector 1 </h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <span><img src="assets/img/user.png"
+                                class="rounded-circle" width="40" height="40">
+                            </span>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> Inspector 1 </h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <span><img src="assets/img/user.png"
+                                class="rounded-circle" width="40" height="40">
+                            </span>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> Inspector A </h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <span><img src="assets/img/user.png"
+                                class="rounded-circle" width="40" height="40">
+                            </span>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> Client 1 </h4>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <a class="card card-stats dashboard-link">
+                        <div class="card-header card-header-warning card-header-icon">
+                            <span><img src="assets/img/user.png"
+                                class="rounded-circle" width="40" height="40">
+                            </span>
+                        </div>
+                        <div class="card-footer">
+                            <h4 class="w-100 text-center"> Inspector B </h4>
+                        </div>
+                    </a>
+                </div>
+            </div>  
+        </mat-tab>
+        </mat-tab-group>
+    </div>
+</div> -->

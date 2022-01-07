@@ -1,0 +1,66 @@
+.h4 {
+  color: red;
+  font-size: 1rem;
+}
+
+img {
+  height: 70px;
+  width: 70px;
+  display: inline-block;
+  float: left;
+  margin: 5px 10px;
+}
+
+.box {
+  border-bottom: grey 1px solid;
+  margin: 5px;
+}
+
+h4 {
+  display: inline;
+  float: left;
+  font-size: 1rem;
+}
+button {
+  margin-left: 100px;
+}
+
+.header{
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  background: rgb(30,30,30);
+  color: white;
+  padding: 5px;
+}
+
+.button{
+  all: unset;
+  /*float: right;*/
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+.clode_btn {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.clode_btn button {
+  padding-left: 7px;
+  margin-right: 15px;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+.image_name h6 {
+  margin-bottom: 10px;
+}
+.progress_content{
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 5px;
+}

@@ -1,0 +1,102 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row mt-5">
+    <div class="col-md-8 ml-auto mr-auto">
+
+      <div class="card card-profile">
+
+        <div class="card-avatar">
+          <span class="profile_img">
+            <img src="{{userDetail.profile_pic}}" (click)="file.click()" alt="Image" style="width:104px;height:104px"
+              class="img-circle">
+            <input type="file" #file (click)="file.value = null" (change)="fileProgress($event)" accept="image/*"
+              style="display:none" />
+          </span>
+        </div>
+        <div class="card-body">
+          <h4 class="card-title">{{userName}}</h4>
+          <h5 class="card-category text-gray">{{userDetail.email}}</h5>
+          <div class="col-md-12">
+            <div class="border_box border_none">
+              <form #editForm="ngForm" (ngSubmit)="onSubmit(userDetail)" class="">
+
+                <div class="textbox-full-width textbox-full-width-pb20">
+                  <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input matInput required id="user_name" [(ngModel)]="userDetail.user_name" name="user_name"
+                      (blur)="userDetail.user_name = sharedService.trimming_function(userDetail.user_name)"
+                      #user_name="ngModel">
+                  </mat-form-field>
+                  <mat-error class="text-left" *ngIf="user_name.dirty && user_name.invalid">
+                    Name is required
+                  </mat-error>
+                </div>
+
+                <div class="textbox-full-width textbox-full-width-pb20">
+                    <mat-form-field>
+                      <mat-label>Email</mat-label>
+                      <input matInput name="email" id="email" [disabled]="isEmail" [(ngModel)]="userDetail.email"
+                        #email="ngModel" required [pattern]="emailPattern">
+                    </mat-form-field>
+                    <div *ngIf="(email.dirty || email.touched) && email.invalid" class="">
+                      <mat-error class="text-left" *ngIf="email.errors.required">
+                        Email is required
+                      </mat-error>
+                      <mat-error class="text-left" *ngIf="email.errors.pattern">
+                        Invalid Email
+                      </mat-error>
+                    </div>
+                  </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="textbox-full-width textbox-full-width-pb20">
+                            <mat-form-field>
+                                <mat-label>Select Country</mat-label>
+                                <mat-select id="prefix_dialing" name="prefix_dialing"  [(ngModel)]="userDetail.prefix_dialing" #prefix_dialing="ngModel" required>
+                                  <mat-option *ngFor="let element of countryWithCode" [value]="element.prefix_dialing">
+                                    {{element.country_name}} ({{element.prefix_dialing}})
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                             <mat-error class="text-left" *ngIf="(prefix_dialing.dirty || prefix_dialing.touched) && prefix_dialing.invalid">
+                                Country Name is required
+                            </mat-error> 
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="textbox-full-width textbox-full-width-pb20">
+                        <mat-form-field>
+                            <mat-label>Mobile Number</mat-label>
+                            <input matInput OnlyNumber="true" required id="mobile_number"
+                              [(ngModel)]="userDetail.mobile_number" type="text" name="mobile_number" maxlength="13"
+                              minlength="7" #mobile_number="ngModel" (keyup)="chekval($event.target.value)">
+                          </mat-form-field>
+                          <div *ngIf="(mobile_number.touched) && mobile_number.invalid" class="">
+                            <mat-error class="text-left" *ngIf="mobile_number.invalid && !numberValidation">
+                              Number is required
+                            </mat-error>
+                            <mat-error class="text-left" *ngIf="numberValidation">
+                              Number Must be 7 Characters Long
+                            </mat-error>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+
+                <!--button-->
+                <span class="pull-right mb15">
+                  <button type="submit" [disabled]="editForm.invalid"
+                    [ngClass]="editForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                    data-toggle="modal" data-target="#ideal_profile" class="mr-2">Save</button>
+                  <button type="button" class="btn btn-danger" [routerLink]="['/dashboard']">Cancel</button>
+                </span>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

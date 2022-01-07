@@ -1,0 +1,220 @@
+<div class="main-content">
+  <div class="col-md-8 ml-auto mr-auto">
+    <div class="card">
+      <div class="card-header card-header-danger">
+        <h4 *ngIf="!editable" class="card-title">Add Project</h4>
+        <h4 *ngIf="editable" class="card-title">Edit Project</h4>
+      </div>
+
+      <div class="card-avatar text-center mt-3">
+        <span class="profile_img">
+          <img *ngIf="!editable" (click)="file.click()" [src]="imgURL" style="width:104px;height:104px"
+            class="img-circle">
+          <img *ngIf="editable" (click)="file.click()" src="{{imgURL}}" alt="Image" style="width:104px;height:104px"
+            class="img-circle">
+
+          <input type="file" #file (click)="file.value = null" (change)="fileProgress($event)" accept="image/*"
+            style="display:none" />
+        </span>
+      </div>
+
+
+      <div class="card-body" id="xyz">
+        <div class="row mb50">
+          <div class="col-md-12">
+            <div class="border_box border_none">
+              <form #myForm="ngForm">
+                <div class="row">
+                  <div class="col-md-12 textbox-full-width textbox-full-width-pb20">
+                    <mat-form-field>
+                      <mat-label>Project Id</mat-label>
+                      <input maxlength="12" matInput required id="project_id" [(ngModel)]="project.project_id"
+                        name="project_id"
+                        (blur)="project.project_id = sharedService.trimming_function(project.project_id)"
+                        #project_id="ngModel">
+                    </mat-form-field>
+                    <mat-error class="text-left" *ngIf="(project_id.dirty || project_id.touched) && project_id.invalid">
+                      Project Id is required
+                    </mat-error>
+
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 textbox-full-width textbox-full-width-pb20">
+                    <mat-form-field>
+                      <mat-label>Project Name</mat-label>
+                      <input maxlength="25" matInput required id="project_name" [(ngModel)]="project.project_name"
+                        name="project_name"
+                        (blur)="project.project_name = sharedService.trimming_function(project.project_name)"
+                        #project_name="ngModel">
+                    </mat-form-field>
+                    <mat-error class="text-left"
+                      *ngIf="(project_name.dirty || project_name.touched) && project_name.invalid">
+                      Project Name is required
+                    </mat-error>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 textbox-full-width textbox-full-width-pb20">
+                    <mat-form-field>
+                      <mat-label>Project Location</mat-label>
+                      <!-- <input maxlength="25" matInput required id="project_name" [(ngModel)]="project.project_name"
+                        name="project_name"
+                        (blur)="project.project_name = sharedService.trimming_function(project.project_name)"
+                        #project_name="ngModel"> -->
+                      <input matInput required id="autocompleteInput" name="autocompleteInput"
+                        [(ngModel)]="autocompleteInput" #addresstext>
+                    </mat-form-field>
+                    <mat-error class="text-left"
+                      *ngIf="(addresstext.dirty || addresstext.touched) && addresstext.invalid">
+                      Project Location is required
+                    </mat-error>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!-- <div class="col-md-12 textbox-full-width">
+                    <mat-form-field>
+                      <mat-label>Project Location</mat-label>
+                      <textarea maxlength="125" matInput rows="5" id="project_location"
+                        [(ngModel)]="project.project_location" name="project_location"
+                        (blur)="project.project_location = sharedService.trimming_function(project.project_location)"
+                        #project_location="ngModel" required></textarea>
+                    </mat-form-field>
+                    <mat-error class="text-left"
+                      *ngIf="(project_location.dirty || project_location.touched) && project_location.invalid">
+                      Project Location is required
+                    </mat-error>
+                  </div> -->
+
+                </div>
+                <div class="row">
+                  <div class="col-md-12 textbox-full-width">
+                    <mat-form-field>
+                      <mat-label>Project Description</mat-label>
+                      <textarea maxlength="255" matInput rows="3" id="project_description"
+                        [(ngModel)]="project.project_description" name="project_description"
+                        (blur)="project.project_description = sharedService.trimming_function(project.project_description)"
+                        #project_description="ngModel" required></textarea>
+                    </mat-form-field>
+                    <mat-error class="text-left"
+                      *ngIf="(project_description.dirty || project_description.touched) && project_description.invalid">
+                      Project Description is required
+                    </mat-error>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 add-project-datepicker">
+                    <mat-form-field>
+                      <input matInput (dateChange)="filterDate()" [(ngModel)]="project.start_date" class="color-black"
+                        [matDatepicker]="start_date" placeholder="Start Date" name="start_date" #start_date="ngModel"
+                        disabled>
+                      <mat-datepicker-toggle matSuffix [for]="start_date"></mat-datepicker-toggle>
+                      <mat-datepicker #start_date disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6 add-project-datepicker">
+                    <mat-form-field>
+                      <input matInput (dateChange)="filterDate()" [min]="project.start_date"
+                        [(ngModel)]="project.end_date" class="color-black" [matDatepicker]="end_date"
+                        placeholder="End Date" name="end_date" #end_date="ngModel" disabled>
+                      <mat-datepicker-toggle matSuffix [for]="end_date"></mat-datepicker-toggle>
+                      <mat-datepicker #end_date disabled="false"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <div class="w-100 text-center mb-5 mt-2">
+
+                  <!-- <div class="col-md-6 textbox-full-width">
+                    <mat-form-field>
+                      <mat-label>Select Member</mat-label>
+                      <mat-select id="projectMembers" name="projectMembers" [(ngModel)]="project.projectMembers"
+                        multiple>
+                        <mat-option *ngFor="let member of members" [value]="member._id">
+                          {{member.user_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div> -->
+
+
+                  <div class="user-select-box">
+                    <div class="w-100 d-flex justify-content-between pb-3 mt-4">
+                      <span class="float-left">
+                        <h3 class="m-0">Project Users</h3>
+                      </span>
+                      <a class="float-left" mat-raised-button (click)="openDialog()">Add Users</a>
+                    </div>
+                   
+                    <div class="user-select-inner-box mb-4 ">
+                        <mat-list>
+                            <mat-list-item *ngFor="let user of projectmemberList">
+                              <mat-icon mat-list-icon style="width: 50px; height:50px" >
+                                  <!-- <img class="rounded" width="50px" height="50px" [src]="user.user_id && user.user_id.profile_pic ? user.user_id.profile_pic : imgURL"> -->
+                                  <img class="rounded" width="50px" height="50px" [src]="userImg">
+                              </mat-icon>
+                              <h4 class="text-left" *ngIf="user.user_id" mat-line>{{user.user_id.user_name | titlecase}}</h4>
+                              <p class="text-left" *ngIf="user.user_id && user.user_id.user_type == 2" mat-line> Inspector </p>
+                              <p class="text-left" *ngIf="user.user_id && user.user_id.user_type == 4" mat-line> Client </p>
+                              <p class="text-left" *ngIf="user.user_id && user.user_id.user_type == 7" mat-line> Sub-Admin </p>
+                              <p class="text-left" *ngIf="user.user_id && user.user_id.user_type == 8" mat-line> Project manager </p>
+                              <p class="text-left" *ngIf="user.user_id && user.user_id.user_type == 9" mat-line> Engineer </p>
+                              <p class="text-left" *ngIf="user.user_id && user.user_id.user_type == 10" mat-line> Ex-Inspector  </p>
+                              <p class="text-left" *ngIf="user.user_id && user.user_id.user_type == 11" mat-line>Ex- Employee  </p>
+                             <span><a href="javascript:void(0)" (click)="onDeleteUser(user)" > <mat-icon mat-list-icon>delete</mat-icon></a></span>
+                             <mat-divider></mat-divider>
+                            </mat-list-item>
+                          </mat-list>
+                           <!-- <div class="no-project-user"><b>No User Selected</b></div> -->
+                    </div>
+                  </div>
+
+
+
+
+                </div>
+                <!-- <div class="row">
+                   <input class="input" name="autocompleteInput" type="text" [(ngModel)]="autocompleteInput" #addresstext
+                    style="padding: 12px 20px; border: 1px solid #ccc; width: 400px">
+                </div> -->
+                <div class="row">
+                  <div class="col-md-12 textbox-full-width">
+                    <div *ngIf="!isshowmarker">
+                      <agm-map [zoom]="5" [streetViewControl]="false" [mapTypeControl]="true" [fullscreenControl]="true"
+                        (mapClick)="placeMarker($event)">
+                        <!-- <agm-marker  [iconUrl]="'assets/img/ic_marker_pin.png'"></agm-marker>
+                    <agm-circle  [radius]="20" [fillOpacity]="0.50" [fillColor]="'#00A19A'"></agm-circle> -->
+                      </agm-map>
+                    </div>
+                    <div *ngIf="isshowmarker">
+                      <agm-map [latitude]="mapLatitude" [longitude]="mapLongitude" [zoom]="7" [streetViewControl]="true"
+                        [mapTypeControl]="true" [fullscreenControl]="true" (mapClick)="placeMarker($event)">
+                        <agm-marker [latitude]="latitude" [agmFitBounds]="true" [longitude]="longitude"
+                          [iconUrl]="'assets/img/ic_marker_pin.png'"></agm-marker>
+                        <!-- <agm-circle [latitude]="latitude" [longitude]="longitude" [radius]="20" [fillOpacity]="0.50" [fillColor]="'#00A19A'"></agm-circle> -->
+                      </agm-map>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mt20">
+                  <div class="col-md-12 text-right">
+                    <button type="submit" *ngIf="!editable"
+                      [ngClass]="myForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                      [disabled]="myForm.invalid" (click)="onSave('save')" class="mr-2">Add</button>
+                    <button type="submit" *ngIf="editable"
+                      [ngClass]="myForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                      [disabled]="myForm.invalid" (click)="onSave('update')" class="mr-2">Update</button>
+                    <button type="button" (click)="onCancel()" class="btn btn-danger btn_d_consist ml15">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

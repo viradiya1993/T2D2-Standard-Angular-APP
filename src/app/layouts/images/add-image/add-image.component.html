@@ -1,0 +1,165 @@
+<div class="main-content">
+  <div class="col-md-12 ml-auto mr-auto">
+    <div class="card">
+      <div class="card-header card-header-danger">
+        <h4 class="card-title">Edit Caption</h4>
+      </div>
+      <div class="card-body">
+        <div class="row mb50">
+          <div class="col-md-12">
+            <div class="border_box border_none">
+              <form #myForm="ngForm">
+
+                <div class="row">
+                  <div class="col-md-6 textbox-full-width">
+                    <mat-form-field>
+                      <mat-label>Image Name</mat-label>
+                      <input matInput required id="image_name" [(ngModel)]="viewContent.image_name" name="image_name"
+                        (blur)="viewContent.image_name = sharedService.trimming_function(viewContent.image_name)"
+                        #image_name="ngModel">
+                    </mat-form-field>
+                    <mat-error class="text-left" *ngIf="(image_name.dirty || image_name.touched) && image_name.invalid">
+                      Image Name is required
+                    </mat-error>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field>
+                      <mat-label>Select Drawing</mat-label>
+                      <mat-select id="drawing_id" name="drawing_id" (selectionChange)="selectedDrawing($event.value)"
+                        disableOptionCentering [(ngModel)]="viewContent.drawing_id" #drawing_id="ngModel">
+                        <mat-option *ngFor="let drawing of drawinglist" [value]="drawing._id">
+                          {{drawing.drawing_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 textbox-full-width">
+                    <mat-form-field>
+                      <mat-label>Image Caption</mat-label>
+                      <textarea matInput rows="5" id="caption" [(ngModel)]="viewContent.caption" name="caption"
+                        (blur)="viewContent.caption = sharedService.trimming_function(viewContent.caption)" #caption="ngModel"
+                        required></textarea>
+                    </mat-form-field>
+                    <mat-error class="text-left" *ngIf="(caption.dirty || caption.touched) && caption.invalid">
+                      Image Caption is required
+                    </mat-error>
+                  </div>
+                </div>
+
+                <div class="row mt-2 mt-3">
+                  <div class="col-md-5 text-center">
+                    <h4 class="font-weight-bold m-0 p-2 card-header-danger">Detected Image</h4>
+                    <div *ngIf="viewContent?.detected_images.length == 1">
+                      <app-image-edit style="width:100%" [curosal]="true"
+                        [image]="viewContent?.detected_images[0].detected_image"
+                        [staticarray]="viewContent?.detected_images[0].box_overlays" #cmp></app-image-edit>
+                      <button type="submit" class="slider_edit_button" data-toggle="modal"
+                        (click)="editable(viewContent?.detected_images[0].detected_image,viewContent?.detected_images[0]._id)"
+                        data-target="#viewModel1"> <i class="material-icons">edit</i>
+                      </button>
+                    </div>
+                    <div *ngIf="viewContent?.detected_images.length > 1">
+                      <div id="demo" class="carousel slide" data-ride="carousel">
+                        <!-- The slideshow -->
+                        <div class="carousel-inner">
+                          <div class="carousel-item " [ngClass]="{'active': i == currentIndex}"
+                            *ngFor="let file of viewContent?.detected_images;let i = index">
+                            <div class="slider_box">
+                              <app-image-edit [curosal]="true" [image]="file.detected_image" style="width:100%"
+                                [staticarray]="file.box_overlays?file.box_overlays:[]" #cmp></app-image-edit>
+                            </div>
+                            <button type="submit" class="mr-2 slider_edit_button" data-toggle="modal"
+                              (click)="editable(file.detected_image,file._id)" data-target="#viewModel1">
+                              <i class="material-icons">edit</i>
+                            </button>
+                          </div>
+                        </div>
+                        <!-- Left and right controls -->
+                        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                          <span class="carousel-control-prev-icon"></span>
+                        </a>
+                        <a class="carousel-control-next" href="#demo" data-slide="next">
+                          <span class="carousel-control-next-icon"></span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-7 text-center">
+                    <h4 class="font-weight-bold m-0 p-2 card-header-danger"> Cad Image </h4>
+                    <canvas (click)="getxy($event)" class="plot-img-thumbnail" #canvas></canvas>
+                  </div>
+                </div>
+
+                <div class="row mt20">
+                  <div class="col-md-12 text-right">
+                    <button type="submit"
+                      [ngClass]="myForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                      [disabled]="myForm.invalid" (click)="onSave()" class="mr-2">Update</button>
+                    <button type="button" class="btn btn-danger btn_d_consist ml15"
+                      [routerLink]="['/images']">Cancel</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade pl300" id="viewModel1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius: 0;">
+      <div class="modal-header pad0">
+        <h4 class="modal-title text-capitalize"> <b>Update Image</b></h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <img c15="" alt="Image" src="assets/img/ModelWindowClose.svg" width="20">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="">
+          <div class="">
+            <div id="stage-parent" style="width:100%;overflow: auto;max-height: 600px">
+              <div id="container"></div>
+            </div>
+            <div>
+              <button type="submit" class="mr-2 btn btn-info" data-toggle="modal" data-target="#viewModel2">Add</button>
+              <button type="button" class="mr-2 btn btn-success" id="save_detectedimage"
+                data-dismiss="modal">save</button>
+              <button id="remove" class="btn btn-danger">remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade pl300" id="viewModel2" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content" style="border-radius: 0;">
+      <div class="modal-header pad0">
+        <h4 class="modal-title text-capitalize"> <b>Select detection type </b></h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <img c15="" alt="Image" src="assets/img/ModelWindowClose.svg" width="20">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-lg-12 my-1" *ngFor="let setting of settings">
+            <mat-radio-group [(ngModel)]="color" name="color">
+              <mat-radio-button value="{{setting.setting_color}}" > <span class="cl-black" >{{setting.setting_name}}</span></mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <button [disabled]="!color" [ngClass]="!color ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+          class="mr-2" id="add_rect" data-dismiss="modal">ok</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

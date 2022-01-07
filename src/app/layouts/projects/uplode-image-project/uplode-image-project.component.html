@@ -1,0 +1,230 @@
+<!-- <div class="main-content">
+  <div class="container-fluid">
+    <mat-horizontal-stepper #stepper>
+      <mat-step [stepControl]="firstFormGroup">
+        <div class="row">
+          <h4>image</h4>
+          <div>
+            <div>
+              <input type="file" accept=".png, .jpg, .jpeg" id="file" multiple (change)="getFileDetails($event)">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 images_select_box" *ngFor="let url of urls; let i = index">
+              <span style="position: relative; margin: 0 auto; display: inline-block;">
+                <img [src]="url" alt="" class="img-thumbnail " style="width: 100px;min-width: 100px;">
+                <a style="position: absolute;
+                      width: 90%;
+                      height: 90%;
+                      margin: 0 auto;
+                      background-color: #00000052;
+                      border-radius: 10px;
+                      right: 1px;
+                      z-index: 99;
+                      float: right;
+                      cursor: pointer;
+                      left: 0px;
+                      top: 5%;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;" class="upload_trash" (click)="removeFile(i)">
+                  <img src="assets/img/delete.svg" width="30" alt="Image">
+                </a>
+              </span>
+              <input type="checkbox" [checked]="false" (change)="changeStatus($event , i)">
+            </div>
+          </div>
+        </div>
+        <div>
+          <button type="button" class="btn btn-danger btn_d_consist ml15" [routerLink]="['/projects']">Back</button>
+          <button [ngClass]="urls.length == 0 ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+            [disabled]="urls.length == 0" mat-button matStepperNext (click)="uploadFiles()">Detect Damage</button>
+        </div>
+
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <div class="row">
+          <div class="col-md-12 text-left">
+            <h4>Images</h4>
+            <div class="row">
+              <div class="col-md-3 images_select_box" *ngFor="let file of detectedData; let i = index">
+                <div class="row">
+                  <div class="col-md-4">
+                    <span style=" position: relative;
+                            margin: 0 auto;
+                            display: inline-block;">
+                      <img [src]="'http://119.160.193.114:4300/images/detected_image/'+file" alt="" class="img-thumbnail " style="width: 100px;min-width: 100px;">
+
+                      <a style="position: absolute;
+                          width: 90%;
+                          height: 90%;
+                          margin: 0 auto;
+                          background-color: #00000052;
+                          border-radius: 10px;
+                          right: 1px;
+                          z-index: 99;
+                          float: right;
+                          cursor: pointer;
+                          left: 0px;
+                          top: 5%;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;" class="upload_trash" (click)="removeFiledetected(i)">
+                        <img src="assets/img/delete.svg" width="30" alt="Image">
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt20">
+              <div class="col-md-12 text-right">
+                <button class="btn btn-danger btn_d_consist ml15" mat-button matStepperPrevious>Back</button>
+                <button type="submit" (click)="secoundStapperSave()" class="mr-2 btn btn-info" mat-button
+                  matStepperNext>Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step [stepControl]="thirdFormGroup">
+        <div class="">
+          <div class="">
+            <h4 class="font-weight-bold">Plot Marker:</h4>
+          </div>
+          <div class="">
+           
+            <div class="textbox-full-width textbox-full-width-pb20">
+              <mat-form-field>
+                <mat-label>Select Project</mat-label>
+                <mat-select id="project_id" name="project_id" (selectionChange)="selectedProject($event.value)" [(ngModel)]="project_id" 
+                  required>
+                  <mat-option *ngFor="let project of projectslist" [value]="project._id">
+                    {{project.project_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-error class="text-left" *ngIf="(project_id.dirty || project_id.touched) && project_id.invalid">
+                project Name is required
+              </mat-error>
+            </div>
+           
+            <div class="textbox-full-width textbox-full-width-pb20">
+              <mat-form-field>
+                <mat-label>Select Drawing</mat-label>
+                <mat-select id="drawing_id" name="drawing_id" (selectionChange)="selectedDrawing($event.value)" #drawing_ids="ngModel" [(ngModel)]="drawing_id" 
+                  required>
+                  <mat-option *ngFor="let drawing of drawinglist" [value]="drawing._id">
+                    {{drawing.drawing_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-error class="text-left" *ngIf="(drawing_ids.dirty || drawing_ids.touched) && drawing_ids.invalid">
+                Drawing Name is required
+              </mat-error>
+            </div>
+            <h4 class="font-weight-bold">Cad Image</h4>
+            <div class="row">
+
+              <div class="col-md-12">
+                <canvas (click)="getxy($event)" class="img-thumbnail" #canvas></canvas>
+              </div>
+            </div>
+           
+            <div class="">
+              <div class="col-md-12 text-right">
+                <button class="btn btn-danger btn_d_consist ml15" mat-button matStepperPrevious>Back</button>
+                <button type="submit" [disabled]="(!drawing_id || !ximg )"
+                [ngClass]="(!drawing_id || !ximg )  ? 'btn btn-info disable-btn disable' : 'btn btn-info'" (click)="thirdStapperSave()" class="mr-2 btn btn-info" mat-button
+                  matStepperNext>Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step>
+        <h2>Carousel Example</h2>
+        <div id="demo" class="carousel slide" data-ride="carousel">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <canvas style="max-height:500px;max-width:360px" class="img-thumbnail" #canvas1></canvas>
+                </div>
+                <div *ngFor="let file of detectedData" class="carousel-item">
+                  <img [src]="'http://119.160.193.114:4300/images/detected_image/'+file" alt="Chicago" width="250px" height="250px">
+                </div>
+              </div>
+              <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                <span style="background-color: black" class="carousel-control-prev-icon"></span>
+              </a>
+              <a class="carousel-control-next" href="#demo" data-slide="next">
+                <span style="background-color: black" class="carousel-control-next-icon"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <form #editForm="ngForm" class="">
+          <div class="textbox-full-width textbox-full-width-pb20">
+            <mat-form-field>
+              <mat-label>Drawing Name</mat-label>
+              <input matInput maxlength="25" required id="image_name" [(ngModel)]="uplode.image_name" name="image_name"
+                (blur)="uplode.image_name = sharedService.trimming_function(uplode.image_name)" #image_name="ngModel">
+            </mat-form-field>
+            <mat-error class="text-left" *ngIf="(image_name.dirty || image_name.touched) && image_name.invalid">
+              Image Name is required
+            </mat-error>
+          </div>
+          <div class="textbox-full-width textbox-full-width-pb20">
+            <mat-form-field>
+              <mat-label>Description</mat-label>
+              <textarea matInput required maxlength="255" rows="5" id="caption" [(ngModel)]="uplode.caption"
+                name="caption" (blur)="uplode.caption = sharedService.trimming_function(uplode.caption)"
+                #caption="ngModel"></textarea>
+            </mat-form-field>
+            <mat-error class="text-left" *ngIf="(caption.dirty || caption.touched) && caption.invalid">
+              Description is required
+            </mat-error>
+          </div>
+          <span class="pull-right mb15">
+              <button  class="btn btn-danger btn_d_consist ml15" mat-button matStepperPrevious>Back</button>
+            <button type="submit" [disabled]="editForm.invalid"
+              [ngClass]="editForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'" (click)="FourthStapperSave()"
+              class="mr-2">Save</button>
+            
+          </span>
+        </form>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </div>
+</div>
+<div class="modal fade pl300" id="viewModel1" role="dialog">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="border-radius: 0;">
+      <div class="modal-header pad0">
+        <h4 class="modal-title text-capitalize"> <b>Project Detail </b></h4>
+        <button type="button" class="close" data-dismiss="modal" (click)="closeModel('viewmember','collapseExample')">
+          <img c15="" alt="Image" src="assets/img/ModelWindowClose.svg" width="20">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="">
+          <div class="">
+            <div class="">
+              <h4 class="font-weight-bold">Plot:</h4>
+            </div>
+            <div id="stage-parent">
+              <div id="container"></div>
+            </div>
+            <div>
+              <button id="test">Add</button>
+              <button id="save">save</button>
+              <button id="remove">remove</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+<app-image-upload (saveData)="saveData($event)"></app-image-upload>

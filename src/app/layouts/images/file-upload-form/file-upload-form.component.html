@@ -1,0 +1,13 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="box" [ngClass]="{'active':dropZoneActive, 'disactive': !dropZoneActive}">
+          <div class="dropzone" appFileDrop (filesDropped)="onDrop($event)" (filesHovered)="dropZoneState($event)"><p>Drop</p></div>
+        </div>
+        <div>
+          <input type="file" name="files" (change)="onSelect($event, inputEl)" multiple #inputEl/>
+        </div>  
+    </div>
+  </div>
+</div>

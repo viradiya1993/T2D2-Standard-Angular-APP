@@ -1,0 +1,129 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+          <button class="mat-raised-button" *ngIf="permissions.PROJECT.CREATE_PROJECT == 1" (click)="goToProject()">Add
+            New Project</button>
+
+        <div class="col-md-4 pull-right">
+        <app-search-textbox (resetIndex)="resetIndex($event)" (searchEvent)="receiveSearchValue($event)">
+        </app-search-textbox>
+      </div>
+      </div>
+      <div class="card">
+        <div class="row card-header card-header-danger">
+          <div class="col-md-6 d-flex align-items-center"><h3 class="m-0">Project List</h3></div>  
+          <div class="col-md-2 mt-2">
+            <button style="float:right" mat-raised-button (click)="resetFilter()">Reset Filter</button>
+          </div>
+          <div class="col-md-2">
+            <mat-form-field class="datepicker-color">
+              <input matInput (dateChange)="filterDate()" [(ngModel)]="start_date" [matDatepicker]="picker"
+                placeholder="Start Date" disabled>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker disabled="false"></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-md-2">
+              <mat-form-field class="datepicker-color">
+                <input matInput [min]="start_date" (dateChange)="filterDate()" [(ngModel)]="end_date"
+                  [matDatepicker]="picker1" placeholder="End Date" disabled>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+              </mat-form-field>
+          </div>
+          
+        </div>
+        <div class="col-lg-12 pt-4" *ngIf="length > 0">
+          <div class="row">
+
+              <div class="col-lg-3 col-md-3 col-sm-4 col-12 mb-4" *ngFor="let projectlist of newlist">
+                  <mat-card >
+                      <img *ngIf="projectlist.project_pic != null" mat-card-image src="{{projectlist?.project_pic}}" (click)="getproject(projectlist);" class="gallery-img">
+                      <img *ngIf="projectlist.project_pic == null" mat-card-image src="assets/img/cityscape.svg"  (click)="getproject(projectlist);" class="gallery-img" >
+
+                      <mat-card-actions class="text-center">
+                          <b>{{projectlist.project_name}}</b>
+                          <div>
+                              <div class="col-lg-12 text-center">Start Date - <b><span *ngIf="projectlist.start_date !== null">
+                                  {{projectlist.start_date| dateFormatPipe}}</span> <span class="text-center" *ngIf="projectlist.start_date == null"> - </span></b>
+                                </div>
+                                <div class="col-lg-12 text-center">End Date - <b><span *ngIf="projectlist.end_date !== null">
+                                  {{projectlist.end_date| dateFormatPipe}}</span> <span class="text-center" *ngIf="projectlist.end_date == null"> - </span></b>
+                                </div>
+                              </div>
+                          <button *ngIf="permissions.PROJECT.UPDATE_PROJECT == 1" mat-icon-button mat-stroked-button class="mr-2"><mat-icon [routerLink]="'/projects/edit-project/' + projectlist._id" aria-hidden="false" >edit</mat-icon></button>
+                          <button *ngIf="permissions.PROJECT.DELETE_PROJECT == 1" mat-icon-button mat-stroked-button color="warn"><mat-icon (click)="openDialog(projectlist._id)" aria-hidden="false" >delete</mat-icon></button>
+                      </mat-card-actions>
+                  </mat-card>
+              </div>
+
+
+              <!-- <div class="w-100 mb-4 ">
+                  <mat-list>
+                      <mat-list-item *ngFor="let projectlist of newlist">
+                        <mat-icon mat-list-icon style="width: 50px; height:50px" >
+                            
+                            <img *ngIf="projectlist.project_pic != null" width="50px" height="50px" src="{{projectlist?.project_pic}}" class="rounded">
+                            <img *ngIf="projectlist.project_pic == null" width="50px" height="50px" src="assets/img/cityscape.svg" class="rounded" >
+                        </mat-icon>
+                        <h4 class="text-left"  mat-line>{{projectlist.project_name}}</h4>
+                        <p class="text-left" mat-line> 
+                            Start Date - <b>
+                              <span *ngIf="projectlist.start_date !== null">{{projectlist.start_date| dateFormatPipe}}</span> 
+                              <span class="text-center" *ngIf="projectlist.start_date == null"> - </span>
+                              </b>  
+
+
+                              End Date - <b><span *ngIf="projectlist.end_date !== null">
+                                  {{projectlist.end_date| dateFormatPipe}}</span> <span class="text-center" *ngIf="projectlist.end_date == null"> - </span></b>
+                        </p>
+                        
+                       <span><a  ><mat-icon aria-hidden="false" >edit</mat-icon> </a>
+                      <a> <mat-icon mat-list-icon>delete</mat-icon></a>
+                      </span>
+                       <mat-divider></mat-divider>
+                      </mat-list-item>
+                    </mat-list>
+
+              </div> -->
+
+
+            <!-- <div class="col-lg-3 col-md-6 col-sm-6 my-2"  *ngFor="let projectlist of newlist">
+              <mat-card class="example-card">
+                <mat-card-content (click)="getproject(projectlist);">
+                  <div class="text-center mb-3" *ngIf="projectlist.project_pic != null"><img src="{{projectlist?.project_pic}}" class="rounded border p-2"
+                    width="100" height="100"> </div>
+                <div *ngIf="projectlist.project_pic == null" class="text-center mb-3"><img src="assets/img/cityscape.svg" class="rounded border p-2"
+                    width="100" height="100"> </div>
+                  <h4 class="text-center pb-2">{{projectlist.project_name}}</h4>
+                  <mat-divider></mat-divider>
+                  <div class="w-100 pt-3 pb-1">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">Start Date - <b><span *ngIf="projectlist.start_date !== null">
+                          {{projectlist.start_date| dateFormatPipe}}</span> <span class="text-center" *ngIf="projectlist.start_date == null"> - </span></b>
+                        </div>
+                        <div class="col-lg-12 text-center">End Date - <b><span *ngIf="projectlist.end_date !== null">
+                          {{projectlist.end_date| dateFormatPipe}}</span> <span class="text-center" *ngIf="projectlist.end_date == null"> - </span></b>
+                        </div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div> -->
+          </div>
+        </div>
+        <div *ngIf="length == 0" class="text-center ">
+          <div class="p-5 border h4 rounded   ">No Record Found</div>
+          <hr>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center w-100">
+      <app-pagination [childMessage]="length" [index]="index" (messageEvent)="receiveMessage($event)">
+      </app-pagination>
+      </div>
+    </div>
+  </div>
+</div> 
+
+<!-- <app-file-upload-progressbar-box></app-file-upload-progressbar-box> -->

@@ -1,0 +1,26 @@
+<mat-tab-group (selectedTabChange)="onEmployeeTab($event)">
+    <mat-tab *ngFor="let type of parentUsertTypes" [label]="type.user_type_name" style="max-height: 200px">
+        <div *ngIf="currentIndex !== 0">
+            <label id="example-radio-group-label" class="text-left w-100 col-md-12"><b>Select Sub-User Type</b></label>
+            <mat-radio-group aria-labelledby="example-radio-group-label" class="modal-radio-group" id="sub_type"
+                name="sub_type">
+                <mat-radio-button color="primary" *ngFor="let child of subUserType" [value]="child.user_type"
+                    (change)="onChangeSubType(child.user_type)">{{child.user_type_name | replaceUnderscore | titlecase}}</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <mat-list *ngFor="let member of Users">
+            <mat-list-item class="pt-0">
+                <mat-checkbox color="primary" class="modal-checkbox" (change)="onChecked(member,$event)"
+                    [checked]="selectedUserIds && selectedUserIds.length > 0 && selectedUserIds.includes(member._id)">
+                    {{member.user_name}}</mat-checkbox>
+            </mat-list-item>
+        </mat-list>
+        <div *ngIf="Users.length === 0" class="modal-no-data">No Data</div>
+    </mat-tab>
+</mat-tab-group>
+
+<div class="text-center my-2"><button mat-raised-button color="primary" type="submit" (click)="submit()"
+        class="mr-2">Add</button>
+        <button mat-raised-button color="warn" type="submit" (click)="onNoClick()"
+        class="mr-2">Cancel</button>
+    </div>

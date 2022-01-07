@@ -1,0 +1,145 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row mt-5">
+    <div class="col-md-8 ml-auto mr-auto">
+      <div class="card card-profile">
+
+        <div class="card-avatar">
+          <span class="profile_img">
+            <img *ngIf="!editable" (click)="file.click()" [src]="imgURL" style="width:104px;height:104px"
+              class="img-circle">
+            <img *ngIf="editable" (click)="file.click()"
+              src="{{inspectorAddDetail.profile_pic != null ? inspectorAddDetail.profile_pic : imgURL}}" alt="Image"
+              style="width:104px;height:104px" class="img-circle">
+
+            <input type="file" #file (click)="file.value = null" (change)="fileProgress($event)" accept="image/*"
+              style="display:none" />
+          </span>
+        </div>
+        <div class="card-body">
+
+          <div class="col-md-12">
+            <div class="border_box border_none">
+              <form #editForm="ngForm" class="">
+                <div class="textbox-full-width textbox-full-width-pb20">
+                  <mat-form-field>
+                    <mat-label>User Name</mat-label>
+                    <input matInput required id="user_name" maxlength="25" [(ngModel)]="inspectorAddDetail.user_name" name="user_name"
+                      (blur)="inspectorAddDetail.user_name = sharedService.trimming_function(inspectorAddDetail.user_name)"
+                      #user_name="ngModel">
+                  </mat-form-field>
+                  <mat-error class="text-left" *ngIf="(user_name.dirty || user_name.touched) && user_name.invalid">
+                    User Name is required
+                  </mat-error>
+                </div>
+                <div class="textbox-full-width textbox-full-width-pb20 add-project-datepicker">
+                  <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input matInput name="email" id="email" [disabled]="editable" [(ngModel)]="inspectorAddDetail.email"
+                      #email="ngModel" required [pattern]="emailPattern">
+                  </mat-form-field>
+                  <div *ngIf="(email.dirty || email.touched) && email.invalid" class="">
+                    <mat-error class="text-left" *ngIf="email.errors.required">
+                      Email is required
+                    </mat-error>
+                    <mat-error class="text-left" *ngIf="email.errors.pattern">
+                      Invalid Email
+                    </mat-error>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                      <div class="textbox-full-width textbox-full-width-pb20">
+                          <mat-form-field>
+                              <mat-label>Select Country</mat-label>
+                              <mat-select (selectionChange)="onChangeCountry($event)" id="prefix_dialing" name="prefix_dialing"  [(ngModel)]="inspectorAddDetail.prefix_dialing" #prefix_dialing="ngModel" required>
+                                <mat-option *ngFor="let element of countryWithCode" [value]="element.prefix_dialing">
+                                  <!-- {{element.country_name}} -->
+                                  {{element.country_name}} ({{element.prefix_dialing}}) 
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <mat-error class="text-left" *ngIf="(prefix_dialing.dirty || prefix_dialing.touched) && prefix_dialing.invalid">
+                              Country Name is required
+                          </mat-error> 
+                      </div>
+                  </div>
+            
+                  <div class="col-md-6">
+                      <div class="textbox-full-width textbox-full-width-pb20">
+                      <mat-form-field>
+                          <mat-label>Mobile Number</mat-label>
+                          <input matInput OnlyNumber="true" required id="mobile_number"
+                            [(ngModel)]="inspectorAddDetail.mobile_number" type="text" name="mobile_number" maxlength="13"
+                            minlength="7" #mobile_number="ngModel" (keyup)="chekval($event.target.value)">
+                      </mat-form-field>
+                        <div *ngIf="(mobile_number.touched || mobile_number.dirty) && mobile_number.invalid" class="">
+                          <mat-error class="text-left" *ngIf="mobile_number.errors.required">
+                            Number is required
+                          </mat-error>
+                          <mat-error class="text-left" *ngIf="numberValidation && !mobile_number.errors.required">
+                            Number Must be 7 Characters Long
+                          </mat-error>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- <div class="col-md-6">
+                    <div class="textbox-full-width textbox-full-width-pb20">
+                      <mat-form-field>
+                        <mat-label>Select Setting</mat-label>
+                        <mat-select id="setting" name="setting" [(ngModel)]="inspectorAddDetail.setting" #setting="ngModel" required
+                          multiple>
+                          <mat-option *ngFor="let setting of settings" [value]="setting._id">
+                            {{setting.setting_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-error class="text-left" *ngIf="(setting.dirty || setting.touched) && setting.invalid">
+                        Setting Name is required
+                      </mat-error>
+                    </div>
+                  </div> -->
+                  <div class="col-md-6">
+                    <div class="w-100">
+                      <label id="example-radio-group-label" class="text-left w-100"><b>Select User Type</b></label>
+                      <mat-radio-group
+                        aria-labelledby="example-radio-group-label"
+                        class="inspectors-radio-group" 
+                        id="user_type" name="user_type"  [(ngModel)]="inspectorAddDetail.user_type" #user_type="ngModel">
+                        <mat-radio-button  *ngFor="let data of mainUserType;let i=index"  [value]="data.user_type" (change)="onChangeUserType(data.user_type)" >{{data.user_type_name | replaceUnderscore | titlecase}}</mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  </div>
+                 
+                  <div class="col-md-6" *ngIf = "showChild">
+                    <div class="w-100">
+                      <label id="example-radio-group-label" class="text-left w-100"><b>Select Sub-User Type</b></label>
+                      <mat-radio-group aria-labelledby="example-radio-group-label"
+                        class="inspectors-radio-group" id="sub_type" name="sub_type" [(ngModel)]="inspectorAddDetail.sub_type"  #sub_type="ngModel">
+                        <mat-radio-button  *ngFor="let child of childUserType"  [value]="child.user_type" (change)="onChnageSubType(child.user_type)" >{{child.user_type_name | replaceUnderscore | titlecase}}</mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="row"> </div>
+                <span class="pull-right mb15">
+                  <button type="submit" *ngIf="!editable" [disabled]="editForm.invalid"
+                    [ngClass]="editForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                    (click)="onSubmit('save')" class="mr-2">Add</button>
+                  <button type="submit" *ngIf="editable" [disabled]="editForm.invalid"
+                    [ngClass]="editForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                    (click)="onSubmit('update')" class="mr-2">Update</button>
+                  <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+                </span>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

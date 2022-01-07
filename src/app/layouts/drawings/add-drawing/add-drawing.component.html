@@ -1,0 +1,149 @@
+<!-- <div class="card-avatar">
+          <span class="profile_img">
+            <img *ngIf="!editable" (click)="file.click()" [src]="imgURL" style="width:104px;height:104px"
+              class="img-circle">
+            <img *ngIf="editable" (click)="file.click()"
+              src="{{drawing.profile_pic != null ? drawing.profile_pic : imgURL}}" alt="Image"
+              style="width:104px;height:104px" class="img-circle">
+
+            <input type="file" #file (click)="file.value = null" (change)="fileProgress($event)" accept="image/*"
+              />
+          </span>
+        </div> -->
+
+<div class="main-content">
+  <div class="col-md-8 ml-auto mr-auto">
+    <div class="card">
+      <div class="card-header card-header-danger">
+        <h4 *ngIf="!editable" class="card-title">Add Drawing</h4>
+        <h4 *ngIf="editable" class="card-title">Edit Drawing</h4>
+      </div>
+      <div class="card-body">
+        <div class="row mb50">
+          <div class="col-md-12">
+            <div class="border_box border_none">
+              <div class="text-center">
+
+                <span class="profile_img">
+
+                  <div *ngIf="!editable">
+                    <div class="text-center">Select Image</div>
+                    <img src="{{drawing.cad_image}}" (click)="file.click()" alt="Image" style="width:104px;height:104px"
+                      class="img-circle">
+                    <input type="file" #file (click)="file.value = null" (change)="onChangeUserImage($event)"
+                      accept="image/*" style="display:none" />
+                  </div>
+                  <div *ngIf="editable">
+                    <div class="text-center">Selected Image</div>
+                     <!-- <img src="{{drawing.cad_image}}" (click)="file.click()" alt="Image" style="width:104px;height:104px"
+                      class="img-circle"> -->
+                      <img src="{{drawing.cad_image}}" alt="Image" style="width:104px;height:104px"
+                      class="img-circle">
+                  </div>
+                </span>
+                <!-- Modal -->
+                <div class="modal fade" id="ideal_model" role="dialog">
+                  <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content pad0" style="border-radius: 0;">
+                      <div class="modal-header">
+                        <h4 class="modal-title"><b>Edit Image</b></h4>
+                        <button type="button" class="close" data-dismiss="modal">
+                          <img c15="" alt="Image" src="assets/img/ModelWindowClose.svg" width="20">
+                        </button>
+
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                          <div class="col-md-12 col-sm-12">
+                            <app-image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false"
+                              [resizeToWidth]="500" [cropperMinWidth]="200" [onlyScaleDown]="true" format="png"
+                              outputType="base64" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                              [style.display]="showCropper ? null : 'none'">
+                            </app-image-cropper>
+                            <!-- <app-image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false"
+                            [resizeToWidth]="0" 
+                            format="png" outputType="base64" (imageCropped)="imageCropped($event)"
+                            (imageLoaded)="imageLoaded()" [style.display]="showCropper ? null : 'none'">
+                          </app-image-cropper> -->
+                          </div>
+                        </div>
+                        <div class="w-100 float-left text-center text-danger">
+                          <div *ngIf="heightValidation == true">
+                              <b>Image area is to small please select larger image area.</b>
+                          </div>
+                         
+                        </div>
+                      </div>
+                      <div class="modal-footer pad0">
+                        <button [disabled]="heightValidation == true" [ngClass]="heightValidation == true ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                        class="mobi_b20 btn btn-info add-btn mt15"
+                          (click)="saveImage()">Save</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <form #editForm="ngForm" class="">
+
+
+                <!-- <div class="textbox-full-width textbox-full-width-pb20">
+                  <mat-form-field>
+                    <mat-label>Select Project</mat-label>
+                    <mat-select id="project_id" name="project_id" [(ngModel)]="drawing.project_id" #project_id="ngModel"
+                      required>
+                      <mat-option *ngFor="let project of projects" [value]="project._id">
+                        {{project.project_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-error class="text-left" *ngIf="(project_id.dirty || project_id.touched) && project_id.invalid">
+                    project Name is required
+                  </mat-error>
+                </div> -->
+
+                <div class="textbox-full-width textbox-full-width-pb20">
+                  <mat-form-field>
+                    <mat-label>Drawing Name</mat-label>
+                    <input matInput required id="drawing_name" [(ngModel)]="drawing.drawing_name" name="drawing_name"
+                      (blur)="drawing.drawing_name = sharedService.trimming_function(drawing.drawing_name)"
+                      #drawing_name="ngModel">
+                  </mat-form-field>
+                  <mat-error class="text-left"
+                    *ngIf="(drawing_name.dirty || drawing_name.touched) && drawing_name.invalid">
+                    Drawing Name is required
+                  </mat-error>
+                </div>
+
+                <div class="textbox-full-width textbox-full-width-pb20">
+                  <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <textarea matInput maxlength="255" rows="3" id="drawing_description"
+                      [(ngModel)]="drawing.drawing_description" name="drawing_description"
+                      (blur)="drawing.drawing_description = sharedService.trimming_function(drawing.drawing_description)"
+                      #drawing_description="ngModel"></textarea>
+                  </mat-form-field>
+                  <!-- <mat-error class="text-left"
+                    *ngIf="(drawing_description.dirty || drawing_description.touched) && drawing_description.invalid">
+                    Description is required
+                  </mat-error> -->
+                </div>
+
+
+                <span class="pull-right mb15">
+                  <button type="submit" *ngIf="!editable" [disabled]="editForm.invalid"
+                    [ngClass]="editForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                    (click)="onSubmit('save')" class="mr-2">Add</button>
+                  <button type="submit" *ngIf="editable" [disabled]="editForm.invalid"
+                    [ngClass]="editForm.invalid ? 'btn btn-info disable-btn disable' : 'btn btn-info'"
+                    (click)="onSubmit('update')" class="mr-2">Update</button>
+                  <button type="button" class="btn btn-danger" [routerLink]="['/drawings']">Cancel</button>
+                </span>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
